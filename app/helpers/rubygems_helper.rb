@@ -56,7 +56,7 @@ module RubygemsHelper
 
     link_to t("rubygems.aside.links.unsubscribe"), rubygem_subscription_path(rubygem.slug),
       class: [:toggler, "gem__link", "t-list__item", style], id: "unsubscribe",
-      method: :delete, remote: true
+      method: :delete
   end
 
   def change_diff_link(rubygem, latest_version)
@@ -121,22 +121,17 @@ module RubygemsHelper
             resend_confirmation_rubygem_owners_path(rubygem.slug), class: "gem__link t-list__item"
   end
 
-  def rubygem_adoptions_link(rubygem)
-    link_to "Adoption",
-      rubygem_adoptions_path(rubygem.slug), class: "gem__link t-list__item"
-  end
-
   def rubygem_security_events_link(rubygem)
     link_to "Security Events",
       security_events_rubygem_path(rubygem.slug), class: "gem__link t-list__item"
   end
 
   def links_to_owners(rubygem)
-    rubygem.owners.sort_by(&:id).inject("") { |link, owner| link << link_to_user(owner) }.html_safe
+    rubygem.owners.sort_by(&:id).inject(+"") { |link, owner| link << link_to_user(owner) }.html_safe
   end
 
   def links_to_owners_without_mfa(rubygem)
-    rubygem.owners.without_mfa.sort_by(&:id).inject("") { |link, owner| link << link_to_user(owner) }.html_safe
+    rubygem.owners.without_mfa.sort_by(&:id).inject(+"") { |link, owner| link << link_to_user(owner) }.html_safe
   end
 
   def link_to_user(user)

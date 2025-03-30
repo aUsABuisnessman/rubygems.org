@@ -12,6 +12,19 @@ class ProfilesControllerTest < ActionController::TestCase
     end
   end
 
+  context "for a user whose email is not confirmed" do
+    setup do
+      @user = create(:user)
+      @user.update(email_confirmed: false)
+    end
+
+    should "render not found page" do
+      get :show, params: { id: @user.handle }
+
+      assert_response :not_found
+    end
+  end
+
   context "when not logged in" do
     setup { @user = create(:user) }
 
@@ -336,7 +349,6 @@ class ProfilesControllerTest < ActionController::TestCase
       end
 
       redirect_scenarios = {
-        "GET to adoptions" => { action: :adoptions, request: { method: "GET", params: { id: 1 } }, path: "/profile/adoptions" },
         "GET to delete" => { action: :delete, request: { method: "GET", params: { id: 1 } }, path: "/profile/delete" },
         "DELETE to destroy" => { action: :destroy, request: { method: "DELETE", params: { id: 1 } }, path: "/profile" },
         "GET to edit" => { action: :edit, request: { method: "GET", params: { id: 1 } }, path: "/profile/edit" },
@@ -405,15 +417,6 @@ class ProfilesControllerTest < ActionController::TestCase
           should "not redirect to mfa" do
             assert_response :success
             assert page.has_content? "Edit Profile"
-          end
-        end
-
-        context "on GET to adoptions" do
-          setup { get :adoptions, params: { id: @user.id } }
-
-          should "not redirect to mfa" do
-            assert_response :success
-            refute page.has_content? "multi-factor"
           end
         end
       end

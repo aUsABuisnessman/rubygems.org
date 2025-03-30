@@ -10,6 +10,10 @@ data:
       worker_connections  5120;
     }
     http {
+      # Ensure buffer is large enough to contend with a redirect to a URL that is at the request line length limit
+      proxy_buffers   4 16k;
+      proxy_buffer_size 16k;
+
       server {
           listen       80;
           server_name  _;
@@ -74,6 +78,8 @@ data:
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme_from_fastly;
+        proxy_set_header Forwarded "";
+        proxy_set_header X-Forwarded-Host "";
         proxy_set_header Client-IP "";
         proxy_set_header Host $host;
         proxy_redirect off;
@@ -144,7 +150,7 @@ data:
 
     }
   logging: |
-    log_format json '{'
+    log_format json escape=json '{'
       '"host": "${HOSTNAME}", '
       '"@timestamp": "$time_iso8601", '
       '"service": "rubygems.org", '
@@ -161,6 +167,7 @@ data:
         '"args": "$args", '
         '"dest_host": "$http_host", '
         '"content_type": "$sent_http_content_type", '
+        '"location": "$sent_http_location", '
         '"protocol": "$server_protocol", '
         '"referer": "$http_referer", '
         '"useragent": "$http_user_agent", '

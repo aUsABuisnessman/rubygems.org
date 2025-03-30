@@ -35,8 +35,7 @@ class Avo::Resources::Rubygem < Avo::BaseResource
 
       field :ownerships, as: :has_many
       field :ownerships_including_unconfirmed, as: :has_many
-      field :ownership_calls, as: :has_many
-      field :ownership_requests, as: :has_many
+      field :organization, as: :belongs_to
 
       field :subscriptions, as: :has_many
       field :subscribers, as: :has_many, through: :subscriptions
@@ -49,6 +48,7 @@ class Avo::Resources::Rubygem < Avo::BaseResource
       field :oidc_rubygem_trusted_publishers, as: :has_many
 
       field :audits, as: :has_many
+      field :events, as: :has_many
     end
   end
 end

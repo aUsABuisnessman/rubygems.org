@@ -9,10 +9,6 @@ class ApplicationPolicy
       @scope = scope
     end
 
-    def resolve
-      raise NotImplementedError, "You must define #resolve in #{self.class}"
-    end
-
     private
 
     attr_reader :user, :scope
@@ -26,38 +22,6 @@ class ApplicationPolicy
     @error = nil
   end
 
-  def index?
-    false
-  end
-
-  def show?
-    false
-  end
-
-  def create?
-    false
-  end
-
-  def new?
-    create?
-  end
-
-  def update?
-    false
-  end
-
-  def edit?
-    update?
-  end
-
-  def destroy?
-    false
-  end
-
-  def search?
-    index?
-  end
-
   private
 
   delegate :t, to: I18n
@@ -67,28 +31,27 @@ class ApplicationPolicy
     false
   end
 
-  def allow
-    @error = nil
-    true
-  end
-
   def current_user?(record_user)
     user && user == record_user
   end
 
   def rubygem_owned_by?(user)
-    rubygem.owned_by?(user) || deny(t(:forbidden))
+    rubygem.owned_by?(user) ||
+      organization_member_with_role?(user, :maintainer) ||
+      deny(t(:forbidden))
   end
 
-  def rubygem_owned_by_with_role?(user, minimum_required_role:)
-    rubygem.owned_by_with_role?(user, minimum_required_role) || deny(t(:forbidden))
+  def rubygem_owned_by_with_role?(user, minimum_required_role:, minimum_required_org_role: :owner)
+    organization_member_with_role?(user, minimum_required_org_role) ||
+      rubygem.owned_by_with_role?(user, minimum_required_role) ||
+      deny(t(:forbidden))
+  end
+
+  def organization_member_with_role?(user, minimum_role)
+    return false unless respond_to?(:organization) && organization.present?
+    organization.memberships.where(user: user).with_minimum_role(minimum_role).exists?
   end
 
   def policy!(user, record) = Pundit.policy!(user, record)
   def user_policy!(record) = policy!(user, record)
-
-  def user_authorized?(record, action)
-    policy = user_policy!(record)
-    policy.send(action) || deny(policy.error)
-  end
 end

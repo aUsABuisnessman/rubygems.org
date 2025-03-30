@@ -10,7 +10,7 @@ zh-TW:
   feed_subscribed: RubyGems.org | 訂閱 Gems
   footer_about_html: RubyGems.org 是 Ruby 社群的 Gem 套件管理服務，讓您能立即地<a href="%{publish_docs}">發佈</a>及<a
     href="%{install_docs}">安裝</a>您的 Gem 套件，並且利用 <a href="%{api_docs}">API</a> 查詢及操作<a
-    href="%{gem_list}">可用 Gem</a> 的詳細資訊。<br />現在就<a href="%{contributing_docs}">成為貢獻者</a>，貢獻一己之力來改善本站。
+    href="%{gem_list}">可用 Gem</a> 的詳細資訊。<br>現在就<a href="%{contributing_docs}">成為貢獻者</a>，貢獻一己之力來改善本站。
   footer_sponsors_html: RubyGems.org 透過與廣大的 Ruby 社群合作而誕生。 <a href="https://www.fastly.com/">Fastly</a>
     提供頻寬和 CDN 支援， <a href="https://www.rubycentral.org/">Ruby Central</a> 支付設備費用，並為進行中的開發和營運工作提供資金。
     <a href="%{sponsors_page}">進一步了解我們的贊助商和它們是如何合作的</a>。
@@ -33,6 +33,8 @@ zh-TW:
   sign_in: 登入
   sign_out: 登出
   sign_up: 註冊
+  by_signing_up:
+  sign_up_terms:
   dependency_list:
   multifactor_authentication: 多重要素驗證
   subtitle: Ruby 社群 Gem 套件管理平台
@@ -42,6 +44,7 @@ zh-TW:
   total_downloads: 總下載次數
   try_again: 發生錯誤。請再試一次。
   update: 更新
+  remove:
   view_all: 查看全部
   advanced_search: 進階搜尋
   authenticate: 驗證
@@ -70,8 +73,12 @@ zh-TW:
         password: 密碼
       ownership/role:
         owner:
+        maintainer:
+      membership/role:
+        owner:
         admin:
         maintainer:
+        outside_contributor:
       api_key:
         oidc_api_key_role: OIDC API 金鑰角色
       oidc/id_token:
@@ -101,11 +108,6 @@ zh-TW:
             user_id:
               already_confirmed: 已是此 Gem 的擁有者
               already_invited: 已獲邀加入此 Gem
-        ownership_request:
-          attributes:
-            user_id:
-              taken:
-              existing:
         user:
           attributes:
             handle:
@@ -224,7 +226,7 @@ zh-TW:
   home:
     index:
       downloads_counting_html: 總下載次數
-      find_blurb: 搜尋、安裝以及發佈 RubyGems
+      find_blurb_html: 搜尋、安裝以及發佈 RubyGems
       learn:
         install_rubygems: 安裝 RubyGems
   layouts:
@@ -244,6 +246,8 @@ zh-TW:
         hosted_by: 托管
         monitored_by: 監控
         optimized_by: 最佳化
+        policies:
+        releases:
         resolved_with: 解析
         security: 安全
         source_code: 原始碼
@@ -272,6 +276,8 @@ zh-TW:
     settings: 設定
     org_name: 組織：%{name}
     subscriptions: 訂閱
+    gems:
+    members:
   mailer:
     confirm_your_email: 已寄送連結，請點擊連結來確認您的電子郵件地址。
     confirmation_subject: "%{host} 電子郵件地址確認"
@@ -357,20 +363,6 @@ zh-TW:
       subtitle:
       body_html:
       body_text:
-    ownerhip_request_closed:
-      title: 所有權請求
-      subtitle: 嗨 %{handle}！
-      body_html: 感謝您申請 <strong>%{gem}</strong> 的所有權。我們很遺憾地通知您，您的所有權請求已被 Gem 擁有者關閉。
-    ownerhip_request_approved:
-      body_html: 恭喜！您對 <strong>%{gem}</strong> 的所有權請求已通過。您已加入 Gem 的擁有者名單。
-    new_ownership_requests:
-      body_html:
-        zero:
-        one:
-        other: "<strong>%{gem}</strong> 有 <em>%{count}</em> 項新所有權請求。請點擊下方按鈕來查看所有請求。"
-      button: 所有權請求
-      disable_notifications: 若要停止接收這些訊息，請更新您的
-      owners_page: 所有權
     web_hook_deleted:
       title: Webhook 遭刪除
       subject: 您在 RubyGems.org 上的 Webhook 遭到刪除
@@ -408,6 +400,16 @@ zh-TW:
       popular_gems: 熱門
     popular:
       title: 熱門新發佈
+  organizations:
+    index:
+      title:
+    show:
+      organization:
+      gems:
+      history:
+      members:
+      no_history:
+      no_gems:
   pages:
     about:
       contributors_amount: "%{count} 位 Ruby 愛好者"
@@ -439,6 +441,17 @@ zh-TW:
       title: 安全性
     sponsors:
       title: 贊助者
+  policies:
+    index:
+      title:
+    terms-of-service:
+      title:
+    acceptable-use:
+      title:
+    copyright:
+      title:
+    privacy:
+      title:
   password_mailer:
     change_password:
       closing:
@@ -458,6 +471,7 @@ zh-TW:
       success:
       failure_on_missing_email:
     update:
+      success:
       failure:
   multifactor_auths:
     session_expired: 您的登入頁面工作階段已過期。
@@ -526,7 +540,6 @@ zh-TW:
       title: 電子郵件通知
       update: 更新
       owner_heading: 所有權通知
-      owner_request_heading: 所有權請求通知
       push_heading: 推送通知
   webauthn_verifications:
     expired_or_already_used: 您所使用的連結中的權杖已過期或被使用。
@@ -543,6 +556,9 @@ zh-TW:
     failed_verification:
       title: 錯誤 - 驗證失敗
       close_browser: 請關閉此瀏覽器並重試。
+  organization_onboardings:
+    confirm:
+      success:
   owners:
     edit:
       role:
@@ -615,11 +631,6 @@ zh-TW:
           ui_and_api: 使用者介面與 API (建議)
           ui_and_gem_signin: 使用者介面和 Gem 登入
   profiles:
-    adoptions:
-      no_ownership_calls:
-      no_ownership_requests: 您尚未建立任何所有權請求。
-      title: 認養
-      subtitle_html: 請求新維護者或所有權 <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">(了解詳情)</a>
     edit:
       change_avatar:
       disabled_avatar_html:
@@ -784,49 +795,6 @@ zh-TW:
         gemspec 指定。
     version:
       yanked: 已被移除
-  adoptions:
-    index:
-      title: 認養
-      subtitle_owner_html: 請求新的維護者加入 %{gem} <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">(read
-        more)</a>
-      subtitle_user_html:
-      ownership_calls:
-      no_ownership_calls:
-  ownership_calls:
-    update:
-      success_notice:
-    create:
-      success_notice:
-    index:
-      title: 徵求維護者
-      subtitle_html: RubyGems 正在尋找新的維護者加入團隊 <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">(了解詳情)</a>
-    share_requirements: 請說明您需要哪方面的協助
-    note_for_applicants:
-    created_by: 建立者
-    details:
-    apply: 申請
-    close: 關閉
-    markup_supported_html: <a class="adoption__rdoc__link" href="https://ruby.github.io/rdoc/RDoc/MarkupReference.html">支援
-      Rdoc 標記語言</a>
-    create_call:
-  ownership_requests:
-    create:
-      success_notice: 您的所有權請求已送出。
-    update:
-      approved_notice: 所有權請求已核准。%{name} 已加入擁有者名單。
-      closed_notice:
-    close:
-      success_notice:
-    ownership_requests: 所有權請求
-    note_for_owners:
-    your_ownership_requests: 您的所有權請求
-    close_all: 全部關閉
-    approve:
-    gems_published: 已發布的 Gems
-    created_at: 建立於
-    no_ownership_requests: 您的專案的加入請求將在此顯示。
-    create_req: 建立所有權請求
-    signin_to_create_html:
   webauthn_credentials:
     callback:
       success: 您已成功註冊安全裝置。

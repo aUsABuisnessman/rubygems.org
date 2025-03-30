@@ -32,6 +32,8 @@ nl:
   sign_in: Inloggen
   sign_out: Uitloggen
   sign_up: Registreren
+  by_signing_up:
+  sign_up_terms:
   dependency_list:
   multifactor_authentication: Multifactor authenticatie
   subtitle: De gem host voor de community
@@ -41,6 +43,7 @@ nl:
   total_downloads:
   try_again: Er is iets fout gegaan, probeer het opnieuw.
   update: Wijzig
+  remove:
   view_all: Bekijk alles
   advanced_search: Uitgebreid zoeken
   authenticate:
@@ -69,8 +72,12 @@ nl:
         password: Wachtwoord
       ownership/role:
         owner:
+        maintainer:
+      membership/role:
+        owner:
         admin:
         maintainer:
+        outside_contributor:
       api_key:
         oidc_api_key_role:
       oidc/id_token:
@@ -100,11 +107,6 @@ nl:
             user_id:
               already_confirmed:
               already_invited:
-        ownership_request:
-          attributes:
-            user_id:
-              taken:
-              existing:
         user:
           attributes:
             handle:
@@ -226,7 +228,7 @@ nl:
   home:
     index:
       downloads_counting_html:
-      find_blurb: Vind je gems makkelijker en publiceer ze sneller.
+      find_blurb_html: Vind je gems makkelijker en publiceer ze sneller.
       learn:
         install_rubygems: Installeer RubyGems
   layouts:
@@ -246,6 +248,8 @@ nl:
         hosted_by: Hosting
         monitored_by: Monitoring
         optimized_by: Optimalisatie
+        policies:
+        releases:
         resolved_with: DNS
         security: Security
         source_code: Code
@@ -274,6 +278,8 @@ nl:
     settings: Instellingen
     org_name: 'Organisatie: %{name}'
     subscriptions: Abonnementen
+    gems:
+    members:
   mailer:
     confirm_your_email:
     confirmation_subject:
@@ -357,20 +363,6 @@ nl:
       subtitle:
       body_html:
       body_text:
-    ownerhip_request_closed:
-      title:
-      subtitle:
-      body_html:
-    ownerhip_request_approved:
-      body_html:
-    new_ownership_requests:
-      body_html:
-        zero:
-        one:
-        other:
-      button:
-      disable_notifications:
-      owners_page:
     web_hook_deleted:
       title:
       subject:
@@ -402,6 +394,16 @@ nl:
       popular_gems:
     popular:
       title:
+  organizations:
+    index:
+      title:
+    show:
+      organization:
+      gems:
+      history:
+      members:
+      no_history:
+      no_gems:
   pages:
     about:
       contributors_amount:
@@ -443,6 +445,17 @@ nl:
       title:
     sponsors:
       title:
+  policies:
+    index:
+      title:
+    terms-of-service:
+      title:
+    acceptable-use:
+      title:
+    copyright:
+      title:
+    privacy:
+      title:
   password_mailer:
     change_password:
       closing:
@@ -462,6 +475,7 @@ nl:
       success:
       failure_on_missing_email:
     update:
+      success:
       failure:
   multifactor_auths:
     session_expired:
@@ -526,7 +540,6 @@ nl:
       title:
       update:
       owner_heading:
-      owner_request_heading:
       push_heading:
   webauthn_verifications:
     expired_or_already_used:
@@ -543,6 +556,9 @@ nl:
     failed_verification:
       title:
       close_browser:
+  organization_onboardings:
+    confirm:
+      success:
   owners:
     edit:
       role:
@@ -614,11 +630,6 @@ nl:
           ui_and_api:
           ui_and_gem_signin:
   profiles:
-    adoptions:
-      no_ownership_calls:
-      no_ownership_requests:
-      title:
-      subtitle_html:
     edit:
       change_avatar:
       disabled_avatar_html:
@@ -781,47 +792,6 @@ nl:
       imported_gem_version_notice:
     version:
       yanked: verwijderd
-  adoptions:
-    index:
-      title:
-      subtitle_owner_html:
-      subtitle_user_html:
-      ownership_calls:
-      no_ownership_calls:
-  ownership_calls:
-    update:
-      success_notice:
-    create:
-      success_notice:
-    index:
-      title:
-      subtitle_html:
-    share_requirements:
-    note_for_applicants:
-    created_by:
-    details:
-    apply:
-    close:
-    markup_supported_html:
-    create_call:
-  ownership_requests:
-    create:
-      success_notice:
-    update:
-      approved_notice:
-      closed_notice:
-    close:
-      success_notice:
-    ownership_requests:
-    note_for_owners:
-    your_ownership_requests:
-    close_all:
-    approve:
-    gems_published:
-    created_at:
-    no_ownership_requests:
-    create_req:
-    signin_to_create_html:
   webauthn_credentials:
     callback:
       success:

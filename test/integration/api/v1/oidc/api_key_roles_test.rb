@@ -56,9 +56,8 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
               headers: { "HTTP_AUTHORIZATION" => @user_api_key }
 
       assert_response :success
-      assert_equal(
-        {
-          "id" => @role.id,
+      assert_equal_hash(
+        { "id" => @role.id,
           "token" => @role.token,
           "oidc_provider_id" => @role.oidc_provider_id,
           "user_id" => @user.id,
@@ -75,8 +74,8 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
           ] },
           "created_at" => @role.created_at.as_json,
           "updated_at" => @role.updated_at.as_json,
-          "deleted_at" => nil
-        }, response.parsed_body
+          "deleted_at" => nil },
+        response.parsed_body
       )
     end
   end
@@ -252,12 +251,13 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
           resp = response.parsed_body
 
           assert_match(/^rubygems_/, resp["rubygems_api_key"])
-          assert_equal({
-                         "rubygems_api_key" => resp["rubygems_api_key"],
+          assert_equal_hash(
+            { "rubygems_api_key" => resp["rubygems_api_key"],
               "name" => "#{@role.name}-79685b65-945d-450a-a3d8-a36bcf72c23d",
               "scopes" => ["push_rubygem"],
-              "expires_at" => 30.minutes.from_now
-                       }, resp)
+              "expires_at" => 30.minutes.from_now },
+            resp
+          )
           hashed_key = @user.api_keys.sole.hashed_key
 
           assert_equal hashed_key, Digest::SHA256.hexdigest(resp["rubygems_api_key"])
@@ -281,13 +281,14 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
           resp = response.parsed_body
 
           assert_match(/^rubygems_/, resp["rubygems_api_key"])
-          assert_equal({
-                         "rubygems_api_key" => resp["rubygems_api_key"],
+          assert_equal_hash(
+            { "rubygems_api_key" => resp["rubygems_api_key"],
               "name" => "#{@role.name}-79685b65-945d-450a-a3d8-a36bcf72c23d",
               "scopes" => ["push_rubygem"],
               "expires_at" => 30.minutes.from_now,
-              "gem" => Rubygem.find_by!(name: gem_name).as_json
-                       }, resp)
+              "gem" => Rubygem.find_by!(name: gem_name).as_json },
+            resp
+          )
           hashed_key = @user.api_keys.sole.hashed_key
 
           assert_equal hashed_key, Digest::SHA256.hexdigest(resp["rubygems_api_key"])
@@ -344,12 +345,13 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
         resp = response.parsed_body
 
         assert_match(/^rubygems_/, resp["rubygems_api_key"])
-        assert_equal({
-                       "rubygems_api_key" => resp["rubygems_api_key"],
+        assert_equal_hash(
+          { "rubygems_api_key" => resp["rubygems_api_key"],
             "name" => "#{@role.name}-79685b65-945d-450a-a3d8-a36bcf72c23d",
             "scopes" => ["push_rubygem"],
-            "expires_at" => 30.minutes.from_now
-                     }, resp)
+            "expires_at" => 30.minutes.from_now },
+          resp
+        )
         hashed_key = @user.api_keys.sole.hashed_key
 
         assert_equal hashed_key, Digest::SHA256.hexdigest(resp["rubygems_api_key"])
@@ -358,16 +360,14 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
 
         assert_equal hashed_key, oidc_id_token.api_key.hashed_key
         assert_equal @role.provider, oidc_id_token.provider
-        assert_equal(
-          {
-            "claims" => @claims,
+        assert_equal_hash(
+          { "claims" => @claims,
             "header" => {
               "alg" => "RS256",
               "kid" => @pkey.to_jwk[:kid],
               "typ" => "JWT"
-            }
-          },
-                     oidc_id_token.jwt
+            } },
+          oidc_id_token.jwt
         )
 
         post assume_role_api_v1_oidc_api_key_role_path(@role.token),
@@ -377,9 +377,66 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
             headers: {}
 
         assert_response :unprocessable_content
-        assert_equal({
-                       "errors" => { "jwt.claims.jti" => ["must be unique"] }
-                     }, response.parsed_body)
+        assert_equal_hash(
+          { "errors" => { "jwt.claims.jti" => ["must be unique"] } },
+          response.parsed_body
+        )
+      end
+    end
+
+    context "with a Buildkite OIDC token" do
+      setup do
+        @role = create(:oidc_api_key_role_buildkite, provider: build(:oidc_provider_buildkite, issuer: "https://agent.buildkite.com", pkey: @pkey))
+        @user = @role.user
+
+        @claims = {
+          "aud" => "rubygems.org",
+          "exp" => 1_680_020_837,
+          "iat" => 1_680_020_537,
+          "iss" => "https://agent.buildkite.com",
+          "jti" => "0194b014-8517-7cef-b232-76a827315f08",
+          "nbf" => 1_680_019_937,
+          "sub" => "organization:example-org:pipeline:example-pipeline:ref:refs/heads/main:commit:b5ffe3aeea51cec6c41aef16e45ee6bce47d8810:step:",
+          "organization_slug" => "example-org",
+          "pipeline_slug" => "example-pipeline",
+          "build_number" => 5,
+          "build_branch" => "main",
+          "build_tag" => nil,
+          "build_commit" => "b5ffe3aeea51cec6c41aef16e45ee6bce47d8810",
+          "step_key" => nil,
+          "job_id" => "01945ecf-80f0-41e8-9b83-a2970a9305a1",
+          "agent_id" => "01945ecf-8bcf-40a6-9d70-a765db9a0928",
+          "build_source" => "ui",
+          "runner_environment" => "buildkite-hosted"
+        }
+
+        travel_to Time.zone.at(1_680_020_830) # after the JWT iat, before the exp
+      end
+
+      context "with matching conditions" do
+        should "return API key" do
+          post assume_role_api_v1_oidc_api_key_role_path(@role.token),
+              params: {
+                jwt: jwt.to_s
+              },
+              headers: {}
+
+          assert_response :created
+
+          resp = response.parsed_body
+
+          assert_match(/^rubygems_/, resp["rubygems_api_key"])
+          assert_equal_hash(
+            { "rubygems_api_key" => resp["rubygems_api_key"],
+              "name" => "#{@role.name}-0194b014-8517-7cef-b232-76a827315f08",
+              "scopes" => ["push_rubygem"],
+              "expires_at" => 30.minutes.from_now },
+            resp
+          )
+          hashed_key = @user.api_keys.sole.hashed_key
+
+          assert_equal hashed_key, Digest::SHA256.hexdigest(resp["rubygems_api_key"])
+        end
       end
     end
   end

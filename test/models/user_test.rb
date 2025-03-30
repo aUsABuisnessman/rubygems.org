@@ -375,14 +375,20 @@ class UserTest < ActiveSupport::TestCase
 
     context "#valid_confirmation_token?" do
       should "return false when email confirmation token has expired" do
-        @user.update_attribute(:token_expires_at, 2.minutes.ago)
+        @user.update(confirmation_token: SecureRandom.hex(24), token_expires_at: 2.minutes.ago)
+
+        refute_predicate @user, :valid_confirmation_token?
+      end
+
+      should "return false when confirmation token is nil" do
+        @user.update(confirmation_token: nil, token_expires_at: 2.minutes.from_now)
 
         refute_predicate @user, :valid_confirmation_token?
       end
 
       should "reutrn true when email confirmation token has not expired" do
         two_minutes_in_future = 2.minutes.from_now
-        @user.update_attribute(:token_expires_at, two_minutes_in_future)
+        @user.update(confirmation_token: SecureRandom.hex(24), token_expires_at: two_minutes_in_future)
 
         assert_predicate @user, :valid_confirmation_token?
       end
@@ -975,20 +981,20 @@ class UserTest < ActiveSupport::TestCase
 
     should "preserve valid characters so that the format error can be returned" do
       # UTF-8 "香" character, which is valid UTF-8, but we reject utf-8 in email addresses
-      assert_equal "香@example.com", User.normalize_email("\u9999@example.com".force_encoding("utf-8"))
+      assert_equal "香@example.com", User.normalize_email(String.new("\u9999@example.com", encoding: "utf-8"))
 
       # ISO-8859-1 "Å" character (valid in ISO-8859-1)
-      encoded_email = "myem\xC5il@example.com".force_encoding("ISO-8859-1")
+      encoded_email = String.new("myem\xC5il@example.com", encoding: "ISO-8859-1")
 
       assert_equal encoded_email, User.normalize_email(encoded_email)
     end
 
     should "return an empty string on invalid inputs" do
       # bad encoding when sent as ASCII-8BIT
-      assert_equal "", User.normalize_email("\u9999@example.com".force_encoding("ascii"))
+      assert_equal "", User.normalize_email(String.new("\u9999@example.com", encoding: "ascii"))
 
       # ISO-8859-1 "Å" character (invalid in UTF-8, which uses \xC385 for this character)
-      assert_equal "", User.normalize_email("myem\xC5il@example.com".force_encoding("UTF-8"))
+      assert_equal "", User.normalize_email(String.new("myem\xC5il@example.com", encoding: "UTF-8"))
     end
 
     should "return an empty string for nil" do

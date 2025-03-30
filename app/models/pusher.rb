@@ -175,7 +175,7 @@ class Pusher
     return true if attestations.blank?
     return notify("Pushing with an attestation requires trusted publishing", 400) unless api_key.trusted_publisher?
 
-    policy = api_key.owner.to_sigstore_identity_policy(api_key.oidc_id_token.jwt.dig("claims", "ref"))
+    policy = api_key.owner.to_sigstore_identity_policy
 
     artifact = Sigstore::Verification::V1::Artifact.new
     artifact.artifact = body.string
@@ -308,7 +308,11 @@ class Pusher
     spec_path = "quick/Marshal.4.8/#{@version.full_name}.gemspec.rz"
 
     # do all processing _before_ we upload anything to S3, so we lower the chances of orphaned files
-    RubygemFs.instance.store(gem_path, gem_contents, checksum_sha256: version.sha256)
+    RubygemFs.instance.store(gem_path, gem_contents, checksum_sha256: version.sha256,
+                             metadata: {
+                               "gem" => version.rubygem.name, "version" => version.number, "platform" => version.platform,
+                               "surrogate-key" => "gem/#{version.rubygem.name}", "sha256" => version.sha256
+                             })
     RubygemFs.instance.store(spec_path, spec_contents, checksum_sha256: version.spec_sha256)
 
     Fastly.purge(path: gem_path)

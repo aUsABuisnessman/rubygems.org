@@ -1,5 +1,5 @@
 class PagesController < ApplicationController
-  before_action :find_page
+  before_action :find_page, only: :show
 
   layout "hammy"
 
@@ -11,7 +11,7 @@ class PagesController < ApplicationController
   private
 
   def find_page
-    id = params.permit(:id).require(:id)
+    id = params[:id]
     raise ActionController::RoutingError, "Page not found" unless Gemcutter::PAGES.include?(id)
     @page = id
   end

@@ -171,7 +171,6 @@ Rails.application.routes.draw do
     resource :totp, only: %i[new create destroy]
     resource :settings, only: :edit
     resource :profile, only: %i[edit update] do
-      get :adoptions
       get :security_events
       member do
         get :delete
@@ -219,17 +218,9 @@ Rails.application.routes.draw do
         get 'confirm', to: 'owners#confirm', as: :confirm, on: :collection
         get 'resend_confirmation', to: 'owners#resend_confirmation', as: :resend_confirmation, on: :collection
       end
-      resource :ownership_calls, only: %i[update create] do
-        patch 'close', to: 'ownership_calls#close', as: :close, on: :collection
-      end
-      resources :ownership_requests, only: %i[create update] do
-        patch 'close_all', to: 'ownership_requests#close_all', as: :close_all, on: :collection
-      end
-      resources :adoptions, only: %i[index]
       resources :trusted_publishers, controller: 'oidc/rubygem_trusted_publishers', only: %i[index create destroy new]
     end
 
-    resources :ownership_calls, only: :index
     resources :webauthn_credentials, only: :destroy
     resource :webauthn_verification, only: [] do
       get 'successful_verification'
@@ -259,6 +250,8 @@ Rails.application.routes.draw do
       get 'verify', to: 'sessions#verify', as: :verify
       post 'authenticate', to: 'sessions#authenticate', as: :authenticate
       post 'webauthn_authenticate', to: 'sessions#webauthn_authenticate', as: :webauthn_authenticate
+
+      get 'development_log_in_as/:user_id', to: 'sessions#development_log_in_as' if Gemcutter::ENABLE_DEVELOPMENT_LOG_IN
     end
 
     resources :users, only: %i[new create]
@@ -267,6 +260,28 @@ Rails.application.routes.draw do
     delete '/sign_out' => 'sessions#destroy', as: 'sign_out'
 
     get '/sign_up' => 'users#new', as: 'sign_up' if Clearance.configuration.allow_sign_up?
+
+    namespace :organizations, as: :organization do
+      get "onboarding", to: redirect("/organizations/onboarding/name")
+      delete "onboarding", to: "onboarding#destroy"
+
+      namespace :onboarding do
+        get "name", to: "name#new"
+        post "name", to: "name#create"
+
+        get "gems", to: "gems#edit"
+        patch "gems", to: "gems#update"
+
+        get "users", to: "users#edit"
+        patch "users", to: "users#update"
+
+        get "confirm", to: "confirm#edit"
+        patch "confirm", to: "confirm#update"
+      end
+    end
+    resources :organizations, only: %i[index show edit update], constraints: { id: Patterns::ROUTE_PATTERN } do
+      resources :gems, only: :index, controller: 'organizations/gems'
+    end
   end
 
   ################################################################################
@@ -296,6 +311,9 @@ Rails.application.routes.draw do
   ################################################################################
   # static pages routes
   get 'pages/*id' => 'pages#show', constraints: { format: :html, id: Regexp.union(Gemcutter::PAGES) }, as: :page
+
+  resources :policies, only: %i[index show], constraints: { format: :html, policy: Regexp.union(Gemcutter::POLICY_PAGES) },
+    param: :policy
 
   ################################################################################
   # Internal Routes
@@ -335,7 +353,7 @@ Rails.application.routes.draw do
     get ':provider/callback', to: 'oauth#create'
     get 'failure', to: 'oauth#failure'
 
-    get 'development_log_in_as/:admin_github_user_id', to: 'oauth#development_log_in_as' if Gemcutter::ENABLE_DEVELOPMENT_ADMIN_LOG_IN
+    get 'development_log_in_as/:admin_github_user_id', to: 'oauth#development_log_in_as' if Gemcutter::ENABLE_DEVELOPMENT_LOG_IN
   end
 
   ################################################################################

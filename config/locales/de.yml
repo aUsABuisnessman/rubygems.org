@@ -42,6 +42,8 @@ de:
   sign_in: Anmelden
   sign_out: Abmelden
   sign_up: Registrieren
+  by_signing_up:
+  sign_up_terms:
   dependency_list: Alle transitiven Abhängigkeiten anzeigen
   multifactor_authentication: Mehrfaktorauthentifizierung
   subtitle: Ihre Community des Gem-Hostingservices
@@ -51,6 +53,7 @@ de:
   total_downloads: Downloads insgesamt
   try_again: Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.
   update: Aktualisieren
+  remove:
   view_all: Alle anzeigen
   advanced_search: Erweiterte Suche
   authenticate: Authentifizieren
@@ -79,8 +82,12 @@ de:
         password: Passwort
       ownership/role:
         owner:
+        maintainer:
+      membership/role:
+        owner:
         admin:
         maintainer:
+        outside_contributor:
       api_key:
         oidc_api_key_role: OIDC-API-Schlüsselrolle
       oidc/id_token:
@@ -112,11 +119,6 @@ de:
             user_id:
               already_confirmed: ist bereits Eigentümer dieses Gems
               already_invited: wurde bereits zu diesem Gem eingeladen
-        ownership_request:
-          attributes:
-            user_id:
-              taken:
-              existing:
         user:
           attributes:
             handle:
@@ -244,7 +246,7 @@ de:
   home:
     index:
       downloads_counting_html: Gezählte Downloads
-      find_blurb: Finde, installiere und veröffentliche RubyGems.
+      find_blurb_html: Finde, installiere und veröffentliche RubyGems.
       learn:
         install_rubygems: Installiere RubyGems
   layouts:
@@ -264,6 +266,8 @@ de:
         hosted_by: Gehostet von
         monitored_by: Überwacht von
         optimized_by: Optimiert mit
+        policies:
+        releases:
         resolved_with: Aufgelöst mit
         security: Security
         source_code: Code
@@ -292,6 +296,8 @@ de:
     settings: Einstellungen
     org_name: 'Organisation: %{name}'
     subscriptions: Abonnements
+    gems:
+    members:
   mailer:
     confirm_your_email: Bitte bestätigen Sie Ihre E-Mail-Adresse mit dem Link, der
       an Ihre E-Mail gesendet wurde.
@@ -395,28 +401,6 @@ de:
       subtitle:
       body_html:
       body_text:
-    ownerhip_request_closed:
-      title: ANFRAGE ZUR BESITZERRECHTIGUNG
-      subtitle: Hallo %{handle}!
-      body_html: Vielen Dank, dass du dich um die Besitzerrechte für das <strong>%{gem}</strong>-Gem
-        beworben hast. Leider müssen wir dir mitteilen, dass deine Anfrage vom Gem-Besitzer
-        geschlossen wurde.
-    ownerhip_request_approved:
-      body_html: Herzlichen Glückwunsch! Deine Anfrage zur Besitzerrechte für das
-        <strong>%{gem}</strong>-Gem wurde genehmigt. Du wurdest als Besitzer zum Gem
-        hinzugefügt.
-    new_ownership_requests:
-      body_html:
-        zero: Es gibt <em>keine</em> neuen Anfragen zur Besitzerrechte für das <strong>%{gem}</strong>-Gem.
-        one: Es gibt <em>eine</em> neue Anfrage zur Besitzerrechte für das <strong>%{gem}</strong>-Gem.
-          Bitte klicke auf den unten stehenden Button, um sie anzuzeigen.
-        other: Es gibt <em>%{count}</em> neue Anfragen zur Besitzerrechte für das
-          <strong>%{gem}</strong>-Gem. Bitte klicke auf den unten stehenden Button,
-          um alle Anfragen anzuzeigen.
-      button: BESITZERRECHTE
-      disable_notifications: Um diese Nachrichten nicht mehr zu erhalten, aktualisiere
-        deine
-      owners_page: BESITZERRECHTE
     web_hook_deleted:
       title: WEBHOOK GELÖSCHT
       subject: Dein %{host}-Webhook wurde gelöscht
@@ -462,6 +446,16 @@ de:
       popular_gems: Beliebte Gems
     popular:
       title: Neue Veröffentlichungen — Beliebte Gems
+  organizations:
+    index:
+      title:
+    show:
+      organization:
+      gems:
+      history:
+      members:
+      no_history:
+      no_gems:
   pages:
     about:
       contributors_amount: "%{count} Rubyists"
@@ -505,6 +499,17 @@ de:
       title: Security
     sponsors:
       title: Sponsors
+  policies:
+    index:
+      title:
+    terms-of-service:
+      title:
+    acceptable-use:
+      title:
+    copyright:
+      title:
+    privacy:
+      title:
   password_mailer:
     change_password:
       closing: If you didn't request this, ignore this email. Your password has not
@@ -527,6 +532,7 @@ de:
         Ändern deines Passworts.
       failure_on_missing_email: Die E-Mail darf nicht leer sein.
     update:
+      success:
       failure: Dein Passwort konnte nicht geändert werden. Bitte versuche es erneut.
   multifactor_auths:
     session_expired: Deine Sitzung auf der Anmeldeseite ist abgelaufen.
@@ -622,7 +628,6 @@ de:
       title:
       update:
       owner_heading:
-      owner_request_heading:
       push_heading:
   webauthn_verifications:
     expired_or_already_used:
@@ -639,6 +644,9 @@ de:
     failed_verification:
       title:
       close_browser:
+  organization_onboardings:
+    confirm:
+      success:
   owners:
     edit:
       role:
@@ -710,11 +718,6 @@ de:
           ui_and_api:
           ui_and_gem_signin:
   profiles:
-    adoptions:
-      no_ownership_calls:
-      no_ownership_requests:
-      title:
-      subtitle_html:
     edit:
       change_avatar:
       disabled_avatar_html:
@@ -877,47 +880,6 @@ de:
       imported_gem_version_notice:
     version:
       yanked:
-  adoptions:
-    index:
-      title:
-      subtitle_owner_html:
-      subtitle_user_html:
-      ownership_calls:
-      no_ownership_calls:
-  ownership_calls:
-    update:
-      success_notice:
-    create:
-      success_notice:
-    index:
-      title:
-      subtitle_html:
-    share_requirements:
-    note_for_applicants:
-    created_by:
-    details:
-    apply:
-    close:
-    markup_supported_html:
-    create_call:
-  ownership_requests:
-    create:
-      success_notice:
-    update:
-      approved_notice:
-      closed_notice:
-    close:
-      success_notice:
-    ownership_requests:
-    note_for_owners:
-    your_ownership_requests:
-    close_all:
-    approve:
-    gems_published:
-    created_at:
-    no_ownership_requests:
-    create_req:
-    signin_to_create_html:
   webauthn_credentials:
     callback:
       success:

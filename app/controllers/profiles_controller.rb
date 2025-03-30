@@ -8,7 +8,8 @@ class ProfilesController < ApplicationController
   before_action :disable_cache, only: :edit
 
   def show
-    @user = User.find_by_slug!(params[:id])
+    @user = User.confirmed.find_by_slug!(params[:id])
+    return render_not_found unless @user
     @rubygems = @user.rubygems_downloaded.includes(%i[latest_version gem_download]).strict_loading
   end
 
@@ -47,11 +48,6 @@ class ProfilesController < ApplicationController
     redirect_to root_path, notice: t(".request_queued")
   end
 
-  def adoptions
-    @ownership_calls = current_user.ownership_calls.includes(:user, rubygem: %i[latest_version gem_download])
-    @ownership_requests = current_user.ownership_requests.includes(:rubygem)
-  end
-
   def security_events
     @security_events = current_user.events.order(id: :desc).page(params[:page]).per(50)
     render Profiles::SecurityEventsView.new(security_events: @security_events)
@@ -60,7 +56,7 @@ class ProfilesController < ApplicationController
   private
 
   def params_user
-    params.permit(user: PERMITTED_PROFILE_PARAMS).require(:user).tap do |hash|
+    params.expect(user: PERMITTED_PROFILE_PARAMS).tap do |hash|
       hash.delete(:unconfirmed_email) if hash[:unconfirmed_email] == current_user.email
     end
   end
@@ -68,7 +64,7 @@ class ProfilesController < ApplicationController
   PERMITTED_PROFILE_PARAMS = %i[handle twitter_username unconfirmed_email public_email full_name].freeze
 
   def verify_password
-    password = params.permit(user: :password).require(:user)[:password]
+    password = params.expect(user: :password)[:password]
     return if current_user.authenticated?(password)
     redirect_to edit_profile_path, notice: t("profiles.request_denied")
   end

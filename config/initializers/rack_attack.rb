@@ -42,11 +42,11 @@ class Rack::Attack
   mfa_password_edit_action = { controller: "passwords", action: "otp_edit" }
 
   protected_ui_mfa_actions = [
-    otp_create_action,
-    mfa_password_edit_action,
     { controller: "totps", action: "create" },
     { controller: "totps", action: "destroy" },
-    { controller: "multifactor_auths", action: "update" }
+    { controller: "multifactor_auths", action: "update" },
+    otp_create_action,
+    mfa_password_edit_action
   ]
 
   protected_api_key_actions = [
@@ -227,16 +227,6 @@ class Rack::Attack
 
   throttle("owners/email", limit: REQUEST_LIMIT_PER_EMAIL, period: LIMIT_PERIOD) do |req|
     if protected_route?(protected_ui_owners_actions, req.path, req.request_method)
-      action_dispatch_req = ActionDispatch::Request.new(req.env)
-      User.find_by_remember_token(action_dispatch_req.cookie_jar.signed["remember_token"])&.email.presence
-    end
-  end
-
-  rate_limited_ownership_request_action = [{ controller: "ownership_requests", action: "create" }]
-  REQUEST_LIMIT_PERIOD = 2.days
-
-  throttle("ownership_requests/email", limit: REQUEST_LIMIT_PER_EMAIL, period: REQUEST_LIMIT_PERIOD) do |req|
-    if protected_route?(rate_limited_ownership_request_action, req.path, req.request_method)
       action_dispatch_req = ActionDispatch::Request.new(req.env)
       User.find_by_remember_token(action_dispatch_req.cookie_jar.signed["remember_token"])&.email.presence
     end

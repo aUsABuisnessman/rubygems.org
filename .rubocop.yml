@@ -1,9 +1,9 @@
 inherit_from: .rubocop_todo.yml
-require:
-  - ./lib/cops/safe_navigation_cop.rb
+plugins:
   - rubocop-performance
   - rubocop-rails
   - rubocop-minitest
+require:
   - rubocop-capybara
   - rubocop-factory_bot
 
@@ -14,7 +14,8 @@ AllCops:
     - !ruby/regexp /(vendor|bundle|bin|db/(migrate/|schema\.rb|downloads_schema\.rb)|tmp|server)($|\/.*)/
   DisplayCopNames: true
   DisplayStyleGuide: true
-  TargetRubyVersion: 3.3
+  ParserEngine: parser_prism
+  TargetRubyVersion: 3.4
   NewCops: enable
 
 Rails:
@@ -130,9 +131,9 @@ Naming/AccessorMethodName:
   Exclude:
     - app/controllers/application_controller.rb
 
-Style/CustomSafeNavigationCop:
-  Exclude:
-    - app/models/links.rb
+Rails/SafeNavigation:
+  Enabled: true
+  ConvertTry: true
 
 Style/Documentation:
   Enabled: false
@@ -273,6 +274,7 @@ Style/CaseLikeIf:
 
 Style/HashAsLastArrayItem:
   Enabled: true
+  EnforcedStyle: no_braces
 
 Style/HashLikeCase:
   Enabled: true
@@ -299,4 +301,7 @@ Capybara/ClickLinkOrButtonStyle:
   Enabled: false
 
 Rails/ThreeStateBooleanColumn:
+  Enabled: false
+
+Lint/UselessConstantScoping:
   Enabled: false

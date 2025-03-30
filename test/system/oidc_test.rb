@@ -8,13 +8,6 @@ class OIDCTest < ApplicationSystemTestCase
     @id_token = create(:oidc_id_token, user: @user, api_key_role: @api_key_role)
   end
 
-  def sign_in
-    visit sign_in_path
-    fill_in "Email or Username", with: @user.reload.email
-    fill_in "Password", with: @user.password
-    click_button "Sign in"
-  end
-
   def verify_session # rubocop:disable Minitest/TestMethodName
     page.assert_title(/^Confirm Password/)
     fill_in "Password", with: @user.password
@@ -142,14 +135,14 @@ class OIDCTest < ApplicationSystemTestCase
       }
     }
 
-    assert_equal(expected, role.as_json.slice(*expected.keys))
+    assert_equal_hash(expected, role.as_json.slice(*expected.keys))
 
     click_button "Edit API Key Role"
     page.scroll_to :bottom
     click_button "Update Api key role"
 
     page.assert_selector "h1", text: "API Key Role Push #{rubygem.name}"
-    assert_equal(expected, role.reload.as_json.slice(*expected.keys))
+    assert_equal_hash(expected, role.reload.as_json.slice(*expected.keys))
 
     click_button "Edit API Key Role"
 
@@ -176,7 +169,7 @@ class OIDCTest < ApplicationSystemTestCase
     click_button "Update Api key role"
 
     page.assert_text "Access policy statements[1] conditions[1] claim unknown for the provider"
-    assert_equal(expected, role.reload.as_json.slice(*expected.keys))
+    assert_equal_hash(expected, role.reload.as_json.slice(*expected.keys))
 
     page.find_field("Claim", with: "fudge").fill_in with: "event_name"
 
@@ -188,31 +181,134 @@ class OIDCTest < ApplicationSystemTestCase
     click_button "Update Api key role"
 
     page.assert_selector "h1", text: "API Key Role Push gems"
-    assert_equal(expected.merge(
-                   "name" => "Push gems",
-                   "api_key_permissions" => {
-                     "scopes" => %w[push_rubygem yank_rubygem], "valid_for" => 1800, "gems" => nil
-                   },
-                   "access_policy" => {
-                     "statements" => [
-                       {
-                         "effect" => "allow",
-                         "principal" => { "oidc" => "https://token.actions.githubusercontent.com" },
-                         "conditions" => [
-                           { "operator" => "string_equals", "claim" => "aud", "value" => "localhost" }
-                         ]
-                       },
-                       {
-                         "effect" => "allow",
-                         "principal" => { "oidc" => "https://token.actions.githubusercontent.com" },
-                         "conditions" => [
-                           { "operator" => "string_matches", "claim" => "sub", "value" => "repo:example/repo:ref:refs/tags/.*" },
-                           { "operator" => "string_equals", "claim" => "event_name", "value" => "" }
-                         ]
-                       }
-                     ]
-                   }
-                 ), role.reload.as_json.slice(*expected.keys))
+
+    expected.merge!(
+      "name" => "Push gems",
+      "api_key_permissions" => {
+        "scopes" => %w[push_rubygem yank_rubygem], "valid_for" => 1800, "gems" => nil
+      },
+      "access_policy" => {
+        "statements" => [
+          {
+            "effect" => "allow",
+            "principal" => { "oidc" => "https://token.actions.githubusercontent.com" },
+            "conditions" => [
+              { "operator" => "string_equals", "claim" => "aud", "value" => "localhost" }
+            ]
+          },
+          {
+            "effect" => "allow",
+            "principal" => { "oidc" => "https://token.actions.githubusercontent.com" },
+            "conditions" => [
+              { "operator" => "string_matches", "claim" => "sub", "value" => "repo:example/repo:ref:refs/tags/.*" },
+              { "operator" => "string_equals", "claim" => "event_name", "value" => "" }
+            ]
+          }
+        ]
+      }
+    )
+
+    assert_equal_hash(expected, role.reload.as_json.slice(*expected.keys))
+  end
+
+  test "creating and updating an api key role for a provider who isn't GitHub" do
+    provider_two = create(:oidc_provider_buildkite, issuer: "https://agent.buildkite.com")
+    rubygem = create(:rubygem, owners: [@user])
+
+    # We intentionally use a gem that hosts source on GitHub, but a different CI/CD provider for pushing
+    create(:version, rubygem: rubygem, metadata: { "source_code_uri" => "https://github.com/example/repo" })
+
+    sign_in
+
+    visit rubygem_path(rubygem.slug)
+    click_link "OIDC: Create"
+    verify_session
+
+    page.assert_selector "h1", text: "New OIDC API Key Role"
+
+    # The page loads defaulting to Github Actions shaped config
+    assert_field "Name", with: "Push #{rubygem.name}"
+    assert_select "OIDC provider", options: ["https://token.actions.githubusercontent.com", "https://agent.buildkite.com"], selected: "https://token.actions.githubusercontent.com"
+    assert_checked_field "Push rubygem"
+    assert_field "Valid for", with: "PT30M"
+    assert_select "Gem Scope", options: ["All Gems", rubygem.name], selected: rubygem.name
+
+    assert_select "Effect", options: %w[allow deny], selected: "allow",
+      id: "oidc_api_key_role_access_policy_statements_attributes_0_effect"
+    assert_field "Claim", with: "aud",
+      id: "oidc_api_key_role_access_policy_statements_attributes_0_conditions_attributes_0_claim"
+    assert_select "Operator", options: ["String Equals", "String Matches"], selected: "String Equals",
+      id: "oidc_api_key_role_access_policy_statements_attributes_0_conditions_attributes_0_operator"
+    assert_field "Value", with: Gemcutter::HOST,
+      id: "oidc_api_key_role_access_policy_statements_attributes_0_conditions_attributes_0_value"
+
+    # The gem has a source code URI for github, so the form guesses that we will be using a GitHub
+    # shaped OIDC token with a `repository` claim
+    assert_field "Claim", with: "repository",
+      id: "oidc_api_key_role_access_policy_statements_attributes_0_conditions_attributes_1_claim"
+    assert_select "Operator", options: ["String Equals", "String Matches"], selected: "String Equals",
+      id: "oidc_api_key_role_access_policy_statements_attributes_0_conditions_attributes_1_operator"
+    assert_field "Value", with: "example/repo",
+      id: "oidc_api_key_role_access_policy_statements_attributes_0_conditions_attributes_1_value"
+
+    # Adjust the form to align with Buildkite OIDC tokens
+    page.select "https://agent.buildkite.com", from: "OIDC provider"
+
+    # The form defaults to having a "repository" claim with a required value of "example/repo" from the gem source code URI.
+    # Change that to a claim that exists on Buildkite OIDC tokens and is commonly used
+    existing_condition = page.find_all(id: /oidc_api_key_role_access_policy_statements_attributes_\d+_conditions_attributes_\d+_wrapper/).last
+    existing_condition.fill_in "Claim", with: "organization_slug"
+    existing_condition.fill_in "Value", with: "example-org"
+
+    # Now add an additional claim to restrict the key role to a particular pipeline
+    page.click_button "Add condition"
+    new_condition = page.find_all(id: /oidc_api_key_role_access_policy_statements_attributes_\d+_conditions_attributes_\d+_wrapper/).last
+    new_condition.fill_in "Claim", with: "pipeline_slug"
+    new_condition.fill_in "Value", with: "example-pipeline"
+
+    click_button "Create Api key role"
+
+    page.assert_selector "h1", text: "API Key Role Push #{rubygem.name}"
+
+    role = OIDC::ApiKeyRole.where(name: "Push #{rubygem.name}", user: @user, provider: provider_two).sole
+
+    token = role.token
+    expected = {
+      "name" => "Push #{rubygem.name}",
+      "token" => token,
+      "api_key_permissions" => {
+        "scopes" => ["push_rubygem"],
+        "valid_for" => 1800,
+        "gems" => [rubygem.name]
+      },
+      "access_policy" => {
+        "statements" => [
+          {
+            "effect" => "allow",
+            "principal" => { "oidc" => "https://agent.buildkite.com" },
+            "conditions" => [
+              { "operator" => "string_equals", "claim" => "aud", "value" => "localhost" },
+              { "operator" => "string_equals", "claim" => "organization_slug", "value" => "example-org" },
+              { "operator" => "string_equals", "claim" => "pipeline_slug", "value" => "example-pipeline" }
+            ]
+          }
+        ]
+      }
+    }
+
+    assert_equal_hash(expected, role.as_json.slice(*expected.keys))
+
+    click_button "Edit API Key Role"
+
+    page.assert_selector "h1", text: "Edit API Key Role"
+
+    assert_select "OIDC provider", options: ["https://token.actions.githubusercontent.com", "https://agent.buildkite.com"], selected: "https://agent.buildkite.com"
+
+    page.fill_in "Name", with: "Another Name"
+
+    click_button "Update Api key role"
+
+    page.assert_selector "h1", text: "API Key Role Another Name"
   end
 
   test "creating rubygem trusted publishers" do

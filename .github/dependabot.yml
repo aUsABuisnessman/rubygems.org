@@ -6,8 +6,15 @@ updates:
     interval: daily
   open-pull-requests-limit: 99
   versioning-strategy: increase
-  ignore:
-  - dependency-name: "rubocop*"
+  groups:
+    avo:
+      patterns: ["avo", "avo-*"]
+    rubocop:
+      patterns: ["rubocop", "rubocop-*"]
+    rails:
+      patterns: ["rails", "active*", "action*", "railties"]
+    aws:
+      patterns: ["aws-*"]
 - package-ecosystem: github-actions
   directory: "/"
   schedule:

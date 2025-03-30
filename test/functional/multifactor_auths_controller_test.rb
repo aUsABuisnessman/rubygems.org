@@ -272,7 +272,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
       context "on POST to webauthn_update" do
         setup do
-          @origin = WebAuthn.configuration.origin
+          @origin = WebAuthn.configuration.allowed_origins.first
           @rp_id = URI.parse(@origin).host
           @client = WebAuthn::FakeClient.new(@origin, encoding: false)
           WebauthnHelpers.create_credential(
@@ -583,7 +583,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
       context "on POST to webauthn_update" do
         setup do
-          origin = WebAuthn.configuration.origin
+          origin = WebAuthn.configuration.allowed_origins.first
           @rp_id = URI.parse(origin).host
           @client = WebAuthn::FakeClient.new(origin, encoding: false)
           WebauthnHelpers.create_credential(
@@ -654,8 +654,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
           Rubygem::MFA_REQUIRED_THRESHOLD + 1,
           rubygem_id: @rubygem.id
         )
-        @redirect_paths = [adoptions_profile_path,
-                           dashboard_path,
+        @redirect_paths = [dashboard_path,
                            delete_profile_path,
                            edit_profile_path,
                            new_profile_api_key_path,

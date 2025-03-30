@@ -39,6 +39,8 @@ pt-BR:
   sign_in: Fazer Login
   sign_out: Sair
   sign_up: Cadastrar
+  by_signing_up:
+  sign_up_terms:
   dependency_list: Mostrar todas as dependências
   multifactor_authentication: Autenticação Multifator
   subtitle: O host de gems da sua comunidade
@@ -48,6 +50,7 @@ pt-BR:
   total_downloads: Total de downloads
   try_again: Algo deu errado. Por favor, tente novamente.
   update: Atualizar
+  remove:
   view_all: Ver tudo
   advanced_search: Busca avançada
   authenticate:
@@ -76,8 +79,12 @@ pt-BR:
         password: Senha
       ownership/role:
         owner:
+        maintainer:
+      membership/role:
+        owner:
         admin:
         maintainer:
+        outside_contributor:
       api_key:
         oidc_api_key_role:
       oidc/id_token:
@@ -107,11 +114,6 @@ pt-BR:
             user_id:
               already_confirmed:
               already_invited:
-        ownership_request:
-          attributes:
-            user_id:
-              taken:
-              existing:
         user:
           attributes:
             handle:
@@ -232,7 +234,7 @@ pt-BR:
   home:
     index:
       downloads_counting_html: downloads
-      find_blurb: Encontre, instale e publique RubyGems.
+      find_blurb_html: Encontre, instale e publique RubyGems.
       learn:
         install_rubygems: Instalar o RubyGems
   layouts:
@@ -252,6 +254,8 @@ pt-BR:
         hosted_by: Hospedagem
         monitored_by: Monitoramento
         optimized_by: Otimizações
+        policies:
+        releases:
         resolved_with: DNS
         security: Segurança
         source_code: Código Fonte
@@ -280,6 +284,8 @@ pt-BR:
     settings: Configurações da Conta
     org_name: 'Org: %{name}'
     subscriptions: Observando
+    gems:
+    members:
   mailer:
     confirm_your_email: Por favor, confirme seu endereço de email através do link
       que enviamos para o seu endereço de email.
@@ -370,20 +376,6 @@ pt-BR:
       subtitle:
       body_html:
       body_text:
-    ownerhip_request_closed:
-      title:
-      subtitle:
-      body_html:
-    ownerhip_request_approved:
-      body_html:
-    new_ownership_requests:
-      body_html:
-        zero:
-        one:
-        other:
-      button:
-      disable_notifications:
-      owners_page:
     web_hook_deleted:
       title:
       subject:
@@ -415,6 +407,16 @@ pt-BR:
       popular_gems: Gems Populares
     popular:
       title: Novos Releases - Gems Populares
+  organizations:
+    index:
+      title:
+    show:
+      organization:
+      gems:
+      history:
+      members:
+      no_history:
+      no_gems:
   pages:
     about:
       contributors_amount:
@@ -455,6 +457,17 @@ pt-BR:
       title:
     sponsors:
       title:
+  policies:
+    index:
+      title:
+    terms-of-service:
+      title:
+    acceptable-use:
+      title:
+    copyright:
+      title:
+    privacy:
+      title:
   password_mailer:
     change_password:
       closing:
@@ -474,6 +487,7 @@ pt-BR:
       success:
       failure_on_missing_email:
     update:
+      success:
       failure:
   multifactor_auths:
     session_expired:
@@ -538,7 +552,6 @@ pt-BR:
       title:
       update:
       owner_heading:
-      owner_request_heading:
       push_heading:
   webauthn_verifications:
     expired_or_already_used:
@@ -555,6 +568,9 @@ pt-BR:
     failed_verification:
       title:
       close_browser:
+  organization_onboardings:
+    confirm:
+      success:
   owners:
     edit:
       role:
@@ -626,11 +642,6 @@ pt-BR:
           ui_and_api:
           ui_and_gem_signin:
   profiles:
-    adoptions:
-      no_ownership_calls:
-      no_ownership_requests:
-      title:
-      subtitle_html:
     edit:
       change_avatar: Mudar foto de perfil
       disabled_avatar_html:
@@ -739,14 +750,14 @@ pt-BR:
       reserved_namespace_html:
         one: This gem previously existed, but has been removed by its owner. The RubyGems.org
           team has reserved this gem name for 1 more day. After that time is up, anyone
-          will be able to claim this gem name using gem push. <br/> If you are the
+          will be able to claim this gem name using gem push. <br> If you are the
           previous owner of this gem, you can change ownership of this gem using the
           gem owner command. You can also create new versions of this gem using gem
           push.
         other: This gem previously existed, but has been removed by its owner. The
           RubyGems.org team has reserved this gem name for %{count} more days. After
           that time is up, anyone will be able to claim this gem name using gem push.
-          <br/> If you are the previous owner of this gem, you can change ownership
+          <br> If you are the previous owner of this gem, you can change ownership
           of this gem using the gem owner command. You can also create new versions
           of this gem using gem push.
     security_events:
@@ -805,47 +816,6 @@ pt-BR:
       imported_gem_version_notice:
     version:
       yanked: removida
-  adoptions:
-    index:
-      title:
-      subtitle_owner_html:
-      subtitle_user_html:
-      ownership_calls:
-      no_ownership_calls:
-  ownership_calls:
-    update:
-      success_notice:
-    create:
-      success_notice:
-    index:
-      title:
-      subtitle_html:
-    share_requirements:
-    note_for_applicants:
-    created_by:
-    details:
-    apply:
-    close:
-    markup_supported_html:
-    create_call:
-  ownership_requests:
-    create:
-      success_notice:
-    update:
-      approved_notice:
-      closed_notice:
-    close:
-      success_notice:
-    ownership_requests:
-    note_for_owners:
-    your_ownership_requests:
-    close_all:
-    approve:
-    gems_published:
-    created_at:
-    no_ownership_requests:
-    create_req:
-    signin_to_create_html:
   webauthn_credentials:
     callback:
       success:

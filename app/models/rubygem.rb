@@ -8,7 +8,6 @@ class Rubygem < ApplicationRecord
   has_many :owners_including_unconfirmed, through: :ownerships_including_unconfirmed, source: :user
   has_many :push_notifiable_owners, ->(gem) { gem.owners.push_notifiable_owners }, through: :ownerships, source: :user
   has_many :ownership_notifiable_owners, ->(gem) { gem.owners.ownership_notifiable_owners }, through: :ownerships, source: :user
-  has_many :ownership_request_notifiable_owners, ->(gem) { gem.owners.ownership_request_notifiable_owners }, through: :ownerships, source: :user
   has_many :subscriptions, dependent: :destroy
   has_many :subscribers, through: :subscriptions, source: :user
   has_many :versions, dependent: :destroy, validate: false
@@ -16,8 +15,6 @@ class Rubygem < ApplicationRecord
   has_many :web_hooks, dependent: :destroy
   has_one :linkset, dependent: :destroy
   has_one :gem_download, -> { where(version_id: 0) }, inverse_of: :rubygem
-  has_many :ownership_calls, -> { opened }, dependent: :destroy, inverse_of: :rubygem
-  has_many :ownership_requests, -> { opened }, dependent: :destroy, inverse_of: :rubygem
   has_many :audits, as: :auditable, inverse_of: :auditable
   has_many :link_verifications, as: :linkable, inverse_of: :linkable, dependent: :destroy
   has_many :oidc_rubygem_trusted_publishers, class_name: "OIDC::RubygemTrustedPublisher", inverse_of: :rubygem, dependent: :destroy
@@ -25,6 +22,8 @@ class Rubygem < ApplicationRecord
   has_many :reverse_dependencies, through: :incoming_dependencies, source: :version_rubygem
   has_many :reverse_development_dependencies, -> { merge(Dependency.development) }, through: :incoming_dependencies, source: :version_rubygem
   has_many :reverse_runtime_dependencies, -> { merge(Dependency.runtime) }, through: :incoming_dependencies, source: :version_rubygem
+
+  belongs_to :organization, optional: true
 
   # needs to come last so its dependent: :destroy works, since yanking a version
   # will create an event
@@ -176,7 +175,7 @@ class Rubygem < ApplicationRecord
   end
 
   def unowned?
-    ownerships.blank?
+    ownerships.none? && !owned_by_organization?
   end
 
   def indexed_versions?
@@ -185,7 +184,7 @@ class Rubygem < ApplicationRecord
 
   def owned_by?(user)
     return false unless user
-    ownerships.exists?(user_id: user.id)
+    ownerships.exists?(user_id: user.id) || (owned_by_organization? && user_authorized_for_organization?(user))
   end
 
   def owned_by_with_role?(user, minimum_required_role)
@@ -265,10 +264,6 @@ class Rubygem < ApplicationRecord
 
   def create_ownership(user)
     Ownership.create_confirmed(self, user, user) if unowned?
-  end
-
-  def ownership_call
-    ownership_calls.find_by(status: "opened")
   end
 
   def update_versions!(version, spec)
@@ -429,5 +424,13 @@ class Rubygem < ApplicationRecord
 
     sanitized_query = ActiveRecord::Base.send(:sanitize_sql_array, update_query)
     ActiveRecord::Base.connection.execute(sanitized_query)
+  end
+
+  def owned_by_organization?
+    organization.present?
+  end
+
+  def user_authorized_for_organization?(user)
+    organization.memberships.exists?(user: user)
   end
 end

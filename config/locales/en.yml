@@ -39,6 +39,8 @@ en:
   sign_in: Sign in
   sign_out: Sign out
   sign_up: Sign up
+  by_signing_up: By signing up, you agree to the
+  sign_up_terms: RubyGems Terms of Service
   dependency_list: Show all transitive dependencies
   multifactor_authentication: Multi-factor authentication
   subtitle: your community gem host
@@ -48,6 +50,7 @@ en:
   total_downloads: Total downloads
   try_again: Something went wrong. Please try again.
   update: Update
+  remove: Remove
   view_all: View all
   advanced_search: Advanced Search
   authenticate: Authenticate
@@ -76,8 +79,12 @@ en:
         password: Password
       ownership/role:
         owner: Owner
+        maintainer: Maintainer
+      membership/role:
+        owner: Owner
         admin: Admin
         maintainer: Maintainer
+        outside_contributor: Outside Contributor
       api_key:
         oidc_api_key_role: OIDC API Key Role
       oidc/id_token:
@@ -107,11 +114,6 @@ en:
             user_id:
               already_confirmed: "is already an owner of this gem"
               already_invited: "is already invited to this gem"
-        ownership_request:
-          attributes:
-            user_id:
-              taken: "has already requested ownership"
-              existing: "is already an owner"
         user:
           attributes:
             handle:
@@ -230,7 +232,7 @@ en:
   home:
     index:
       downloads_counting_html: downloads &amp; counting
-      find_blurb: Find, install, and publish RubyGems.
+      find_blurb_html: Find, install, and publish RubyGems.
       learn:
         install_rubygems: Install RubyGems
   layouts:
@@ -250,6 +252,8 @@ en:
         hosted_by: Hosted by
         monitored_by: Monitored by
         optimized_by: Optimized by
+        policies: Policies
+        releases: Releases
         resolved_with: Resolved with
         security: Security
         source_code: Code
@@ -278,6 +282,8 @@ en:
     settings: Settings
     org_name: "Org: %{name}"
     subscriptions: Subscriptions
+    gems: Gems
+    members: Members
   mailer:
     confirm_your_email: Please confirm your email address with the link sent to your email.
     confirmation_subject: Please confirm your email address with %{host}
@@ -361,20 +367,6 @@ en:
       subtitle: Hi %{user_handle}!
       body_html: Your role was updated to %{role} for <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem.
       body_text: Your role was updated to %{role} for %{gem} gem.
-    ownerhip_request_closed:
-      title: OWNERSHIP REQUEST
-      subtitle: Hi %{handle}!
-      body_html: Thank you for applying for ownership of <strong>%{gem}</strong>. We regret to inform you that your ownership request was closed by the gem owner.
-    ownerhip_request_approved:
-      body_html: Congratulations! Your ownership request for <strong>%{gem}</strong> was approved. You were added as an owner to the gem.
-    new_ownership_requests:
-      body_html:
-        zero: There are <em>no</em> new ownership requests for <strong>%{gem}</strong>.
-        one: There is <em>one</em> new ownership request for <strong>%{gem}</strong>. Please click on the button below to see it.
-        other: There are <em>%{count}</em> new ownership requests for <strong>%{gem}</strong>. Please click on the button below to see all requests.
-      button: OWNERSHIP REQUESTS
-      disable_notifications: To stop receiving these messages, update your
-      owners_page: OWNERSHIPS
     web_hook_deleted:
       title: WEBHOOK DELETED
       subject: Your %{host} webhook was deleted
@@ -412,10 +404,20 @@ en:
       popular_gems: Popular Gems
     popular:
       title: New Releases — Popular Gems
+  organizations:
+    index:
+      title: Organizations
+    show:
+      organization: Organization
+      gems: Gems
+      history: History
+      members: Members
+      no_history: No events yet
+      no_gems: No gems yet
   pages:
     about:
       contributors_amount: "%{count} Rubyists"
-      downloads_amount: "millions of gem downloads"
+      downloads_amount: "billions of gem downloads"
       checkout_code: "please check out the code"
       mit_licensed: "MIT licensed"
       logo_header: Looking for our logo?
@@ -437,6 +439,17 @@ en:
       title: Security
     sponsors:
       title: Sponsors
+  policies:
+    index:
+      title: RubyGems.org Policies
+    terms-of-service:
+      title: Terms of Service
+    acceptable-use:
+      title: Acceptable Use
+    copyright:
+      title: Copyright Policy
+    privacy:
+      title: Privacy Notice
   password_mailer:
     change_password:
       closing: If you didn't request this, ignore this email. Your password has
@@ -458,6 +471,7 @@ en:
       success: You will receive an email within the next few minutes. It contains instructions for changing your password.
       failure_on_missing_email: Email can't be blank.
     update:
+      success: Your password has been changed.
       failure: Your password could not be changed. Please try again.
   multifactor_auths:
     session_expired: Your login page session has expired.
@@ -500,7 +514,7 @@ en:
       otp_code: OTP code
       otp_or_recovery: OTP or recovery code
       recovery_code: Recovery code
-      recovery_code_html: 'You can use a valid  <a href="https://guides.rubygems.org/setting-up-multifactor-authentication/#using-recovery-codes-and-re-setup-a-previously-enabled-mfa", class="t-link">recovery code</a> if you have lost access to your multi-factor authentication device or to your security device.'
+      recovery_code_html: 'You can use a valid <a href="https://guides.rubygems.org/setting-up-multifactor-authentication/#using-recovery-codes-and-re-setup-a-previously-enabled-mfa", class="t-link">recovery code</a> if you have lost access to your multi-factor authentication device or to your security device.'
       security_device: Security Device
       verify_code: Verify code
   totps:
@@ -535,7 +549,6 @@ en:
       title: Email notifications
       update: Update
       owner_heading: Ownership Notifications
-      owner_request_heading: Ownership Request Notifications
       push_heading: Push Notifications
   webauthn_verifications:
     expired_or_already_used: The token in the link you used has either expired or been used already.
@@ -552,6 +565,9 @@ en:
     failed_verification:
       title: Error - Verification Failed
       close_browser: Please close this browser and try again.
+  organization_onboardings:
+    confirm:
+      success: Organization onboarded successfully!
   owners:
     edit:
       role: Role
@@ -581,7 +597,7 @@ en:
       success_notice: "%{handle} was added as an unconfirmed owner. Ownership access will be enabled after the user clicks on the confirmation mail sent to their email."
     update:
       update_current_user_role: Can't update your own Role
-      success_notice: "%{handle} was succesfully updated."
+      success_notice: "%{handle} was successfully updated."
     destroy:
       removed_notice: "%{owner_name} was removed from the owners successfully"
       failed_notice: Can't remove the only owner of the gem
@@ -623,11 +639,6 @@ en:
           ui_and_api: UI and API (Recommended)
           ui_and_gem_signin: UI and gem signin
   profiles:
-    adoptions:
-      no_ownership_calls: You have not created any ownership call for any of your gems.
-      no_ownership_requests: You have not created any ownership request.
-      title: Adoption
-      subtitle_html: Ask for new maintainers or request ownership <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">(read more)</a>
     edit:
       change_avatar: Change Avatar
       disabled_avatar_html: "A default avatar is used due to private email settings. To enable a personalized <a href='https://gravatar.com'>Gravatar</a>, turn on 'Show email in public profile'. Notice this will expose your email to the public."
@@ -732,8 +743,8 @@ en:
     show_yanked:
       not_hosted_notice: This gem is not currently hosted on RubyGems.org. Yanked versions of this gem may already exist.
       reserved_namespace_html:
-        one: This gem previously existed, but has been removed by its owner. The RubyGems.org team has reserved this gem name for 1 more day. After that time is up, anyone will be able to claim this gem name using gem push. <br/> If you are the previous owner of this gem, you can change ownership of this gem using the gem owner command. You can also create new versions of this gem using gem push.
-        other: This gem previously existed, but has been removed by its owner. The RubyGems.org team has reserved this gem name for %{count} more days. After that time is up, anyone will be able to claim this gem name using gem push. <br/> If you are the previous owner of this gem, you can change ownership of this gem using the gem owner command. You can also create new versions of this gem using gem push.
+        one: This gem previously existed, but has been removed by its owner. The RubyGems.org team has reserved this gem name for 1 more day. After that time is up, anyone will be able to claim this gem name using gem push. <br><br> If you are the previous owner of this gem, you can change ownership of this gem using the gem owner command or create new versions of this gem using gem push.
+        other: This gem previously existed, but has been removed by its owner. The RubyGems.org team has reserved this gem name for %{count} more days. After that time is up, anyone will be able to claim this gem name using gem push. <br><br> If you are the previous owner of this gem, you can change ownership of this gem using the gem owner command or create new versions of this gem using gem push.
     security_events:
       title: Security Events
       description_html: "This page shows the security events that have occurred on %{gem}. If you see any suspicious activity, please <a href='mailto:support@rubygems.org'>contact support</a>."
@@ -790,47 +801,6 @@ en:
       imported_gem_version_notice: "This gem version was imported to RubyGems.org on %{import_date}. The date displayed was specified by the author in the gemspec."
     version:
       yanked: yanked
-  adoptions:
-    index:
-      title: Adoptions
-      subtitle_owner_html: Ask new maintainers to join %{gem} <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">(read more)</a>
-      subtitle_user_html: Request ownership of %{gem} <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">(read more)</a>
-      ownership_calls: Ownership Call
-      no_ownership_calls: There are no ownership calls for %{gem}. The gem owners are not looking for new maintainers.
-  ownership_calls:
-    update:
-      success_notice: The ownership call for %{gem} was closed.
-    create:
-      success_notice: Created ownership call for %{gem}.
-    index:
-      title: Maintainers wanted
-      subtitle_html: RubyGems looking for new maintainers to join <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">(read more)</a>
-    share_requirements: Please share in what areas do you need help
-    note_for_applicants: "Note for applicants:"
-    created_by: Created by
-    details: Details
-    apply: Apply
-    close: Close
-    markup_supported_html: <a class="adoption__rdoc__link" href="https://ruby.github.io/rdoc/RDoc/MarkupReference.html">Rdoc markup supported</a>
-    create_call: Create ownership call
-  ownership_requests:
-    create:
-      success_notice: Your ownership request was submitted.
-    update:
-      approved_notice: Ownership request was approved. %{name} is added as an owner.
-      closed_notice: Ownership request was closed.
-    close:
-      success_notice: All open ownership requests for %{gem} were closed.
-    ownership_requests: Ownership Requests
-    note_for_owners: "Note for owners:"
-    your_ownership_requests: Your ownership requests
-    close_all: Close all
-    approve: Approve
-    gems_published: Gems published
-    created_at: Created at
-    no_ownership_requests: Requests to join your project will show up here. No ownership requests for %{gem} yet.
-    create_req: Create ownership request
-    signin_to_create_html: Please <a href="https://rubygems.org/sign_in">sign in</a> to create an ownership request.
   webauthn_credentials:
     callback:
       success: You have successfully registered a security device.
@@ -844,7 +814,7 @@ en:
       delete_failed: "Could not delete credential"
       delete: Delete
       confirm: Are you sure you want to delete this credential?
-      saved: Security device succesfully created
+      saved: Security device successfully created
     form:
       new_device: Register a new security device
       nickname: Nickname
