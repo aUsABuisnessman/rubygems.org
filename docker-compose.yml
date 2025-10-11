@@ -1,14 +1,8 @@
 services:
   db:
-    image: index.docker.io/library/postgres@sha256:e0892b968fb80d181a96f18bfef0a8a1693c2430fb2bc7392e65a53057eaa303 # 13.14
+    image: index.docker.io/library/postgres@sha256:f104f501cd403abdc56cd17fab81fad0b15754e8dce818e20300a17a3628700f # 14.15
     ports:
       - "127.0.0.1:5432:5432"
-    environment:
-      - POSTGRES_HOST_AUTH_METHOD=trust
-  downloads-db:
-    image: index.docker.io/timescale/timescaledb@sha256:2e3a19fa4624addcb2bb8d37dfe2fee9e12597537b057a742c68aa226ed77da5 # 2.15.1-pg16
-    ports:
-      - "127.0.0.1:5434:5432"
     environment:
       - POSTGRES_HOST_AUTH_METHOD=trust
   cache:

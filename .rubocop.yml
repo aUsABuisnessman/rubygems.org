@@ -10,7 +10,7 @@ AllCops:
   Exclude:
     - config/initializers/forbidden_yaml.rb
     - app/helpers/dynamic_errors_helper.rb
-    - !ruby/regexp /(vendor|bundle|bin|db/(migrate/|schema\.rb|downloads_schema\.rb)|tmp|server)($|\/.*)/
+    - !ruby/regexp /(vendor|bundle|bin|db/(migrate/|schema\.rb)|tmp|server)($|\/.*)/
   DisplayCopNames: true
   DisplayStyleGuide: true
   ParserEngine: parser_prism
@@ -52,6 +52,13 @@ Rails/Output:
   Exclude:
     - app/views/**/*_view.rb
     - app/views/**/*_component.rb
+
+# Disable block forwarding style enforcement - let context determine choice
+Naming/BlockForwarding:
+  Enabled: false
+
+Style/ArgumentsForwarding:
+  Enabled: false
 
 Layout/ArgumentAlignment:
   Enabled: false

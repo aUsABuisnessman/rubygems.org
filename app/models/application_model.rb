@@ -54,7 +54,7 @@ class ApplicationModel
         _read_attribute(attr_name) { |n| missing_attribute(n, caller) }
       end
 
-      def has_attribute?(attr_name) # rubocop:disable Naming/PredicateName
+      def has_attribute?(attr_name) # rubocop:disable Naming/PredicatePrefix
         @attributes.key?(attr_name.to_s)
       end
     end
@@ -64,9 +64,9 @@ class ApplicationModel
     included do
       def ==(other)
         self.class == other.class &&
-          ((attributes.keys | other.attributes.keys).all? do |k|
+          (attributes.keys | other.attributes.keys).all? do |k|
             self[k] == other[k]
-          end)
+          end
       end
 
       alias_method :eql?, :==

@@ -1,4 +1,4 @@
-import { Controller } from "@hotwired/stimulus"
+import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
   static targets = [
@@ -6,34 +6,52 @@ export default class extends Controller {
     "header", // target on which clicks don't hide mobile nav
     "logo",
     "search",
-  ]
-  static classes = ["expanded"]
+  ];
+  static classes = ["expanded"];
 
-  connect() { this.skipSandwichIcon = true }
+  connect() {
+    this.mousedown = false;
+  }
 
   toggle(e) {
     e.preventDefault();
     if (this.collapseTarget.classList.contains(this.expandedClass)) {
-      this.leave()
-      this.logoTarget.focus();
-    } else {
-      this.enter()
-    }
-  }
-
-  focus() {
-    if (this.skipSandwichIcon) { // skip sandwich icon when you tab from "gem" icon
-      this.enter();
-      this.hasSearchTarget && this.searchTarget.focus();
-      this.skipSandwichIcon = false;
-    } else {
       this.leave();
       this.logoTarget.focus();
-      this.skipSandwichIcon = true;
+    } else {
+      this.enter();
     }
   }
 
-  hide(e) { !this.headerTarget.contains(e.target) && this.leave() }
-  leave() { this.collapseTargets.forEach(el => el.classList.remove(this.expandedClass)) }
-  enter() { this.collapseTargets.forEach(el => el.classList.add(this.expandedClass)) }
+  // This event is used to open the menu when user presses "TAB" and focuses on the burger menu
+  focus(event) {
+    // Ignore click events on the burger menu, we are only interested in tab events
+    if (this.mousedown) {
+      this.mousedown = false;
+      return;
+    }
+    // Open the menu
+    this.enter();
+    // Wait 50ms before focusing on the search input - necessary for Firefox mobile
+    setTimeout(() => {
+      this.hasSearchTarget && this.searchTarget.focus();
+    }, 50);
+  }
+
+  // Register if last event was a mousedown
+  mouseDown(e) {
+    this.mousedown = true;
+  }
+
+  hide(e) {
+    !this.headerTarget.contains(e.target) && this.leave();
+  }
+  leave() {
+    this.collapseTargets.forEach((el) =>
+      el.classList.remove(this.expandedClass),
+    );
+  }
+  enter() {
+    this.collapseTargets.forEach((el) => el.classList.add(this.expandedClass));
+  }
 }

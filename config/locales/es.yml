@@ -17,11 +17,8 @@ es:
     comunidad de Ruby. <a href="https://www.fastly.com/">Fastly</a> provee ancho de
     banda y soporte de CDN <a href="https://www.rubycentral.org/">Ruby Central</a>
     cubre los costos de infraestructura y financia el desarrollo y el trabajo en los
-    servidores. <a href="%{sponsors_page}">Aprende más sobre nuestros sponsors y cómo
-    trabajan en conjunto</a>
-  footer_join_rt_html: Necesitamos tu ayuda para financiar el tiempo de los desarrolladores
-    que mantienen RubyGems.org funcionando correctamente para todo el mundo. <a href="https://rubycentral.org/#/portal/signup">Únete
-    a Ruby Central hoy</a>.
+    servidores. <a href="%{supporters_page}">Aprende más sobre nuestros sponsors y
+    cómo trabajan en conjunto</a>
   form_disable_with: Un momento por favor...
   invalid_page: Número de página inexistente. Redireccionando a la página por defecto.
   locale_name: Español
@@ -112,6 +109,16 @@ es:
           attributes:
             handle:
               invalid:
+        membership:
+          attributes:
+            user:
+              taken:
+              blank:
+              required:
+            user_id:
+              taken:
+              blank:
+              required:
         ownership:
           attributes:
             user_id:
@@ -272,14 +279,13 @@ es:
         source_code: Código fuente
         statistics: Estadísticas
         status: Estado
+        support_us:
         supported_by: Con el apoyo de
+        operated_by:
         supported_by_html: |
           <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
           es respaldado por
-        tested_by: Probado por
-        tracking_by: Seguimiento con
         uptime: Uptime
-        verified_by: Verificado por
         secured_by: Protegido por
         looking_for_maintainers: Se buscan mantenedores/as
       header:
@@ -288,6 +294,7 @@ es:
         settings: Configuración
         edit_profile: Editar
         search_gem_html: Buscar gemas&hellip;
+        members:
       mfa_banner_html:
   breadcrumbs:
     home: Inicio
@@ -297,6 +304,7 @@ es:
     subscriptions: Suscripciones
     gems:
     members:
+    invite_member:
   mailer:
     confirm_your_email: Por favor confirma tu dirección de correo con el enlace enviado.
     confirmation_subject: Por favor confirma tu dirección de correo con %{host}
@@ -444,6 +452,7 @@ es:
   organizations:
     index:
       title:
+      no_organizations:
     show:
       organization:
       gems:
@@ -451,6 +460,39 @@ es:
       members:
       no_history:
       no_gems:
+      add_member:
+      invite:
+      transfer:
+    members:
+      create:
+        user_already_invited:
+        user_not_found:
+        member_invited:
+      update:
+        member_updated:
+      destroy:
+        member_removed:
+        cannot_remove_self:
+      resend_invitation:
+        invitation_resent:
+        already_confirmed:
+      index:
+        invite:
+        pending:
+      edit:
+        update:
+        delete:
+        resend_invitation:
+      new:
+        handle:
+        role:
+        create:
+        invite:
+    invitations:
+      show:
+        accept:
+        decline:
+        title_html:
   pages:
     about:
       contributors_amount: "%{count} Rubystas"
@@ -489,8 +531,8 @@ es:
       title: Descargar RubyGems
     security:
       title: Seguridad
-    sponsors:
-      title: Patrocinadores
+    supporters:
+      title:
   policies:
     index:
       title:
@@ -502,6 +544,15 @@ es:
       title:
     privacy:
       title:
+  policies_mailer:
+    policy_update_announcement:
+      subject:
+      title:
+      subtitle:
+    policy_update_review_closed:
+      subject:
+      title:
+      subtitle:
   password_mailer:
     change_password:
       closing:
@@ -801,7 +852,9 @@ es:
       reserved_namespace: Este namespace está reservado por rubygems.org.
     dependencies:
       header: dependencias de %{title}
-    gem_members:
+    release_info:
+      managed_by:
+      outside_contributors:
       authors_header: Autores
       self_no_mfa_warning_html: Considera por favor <a href="/settings/edit">activar
         la autenticación de múltiples factores (AMF)</a> para mantener tu cuenta segura.
@@ -854,6 +907,15 @@ es:
     security_events:
       title:
       description_html:
+    transfer:
+      cancelled:
+      organizations:
+        new:
+          organization:
+      confirm:
+        success:
+          one:
+          other:
   reverse_dependencies:
     index:
       title: Dependencias inversas para %{name}

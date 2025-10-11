@@ -17,11 +17,8 @@ de:
     Ruby-Gemeinschaft ermöglicht. <a href="https://www.fastly.com/">Fastly</a>, der
     Anbieter von Bandbreite und CDN-Support, <a href="https://www.rubycentral.org/">Ruby
     Central</a>, das die Infrastrukturkosten trägt, und die Finanzierung der Entwicklung
-    und Verwaltung der Server übernimmt. <a href="%{sponsors_page}">Erfahren Sie mehr
-    über unsere Sponsoren und wie sie zusammenarbeiten.</a>
-  footer_join_rt_html: Wir benötigen Ihre Hilfe, um die Entwicklerzeit zu finanzieren,
-    die RubyGems.org für alle reibungslos am Laufen hält. <a href="https://rubycentral.org/#/portal/signup">Treten
-    Sie heute Ruby Central bei</a>.
+    und Verwaltung der Server übernimmt. <a href="%{supporters_page}">Erfahren Sie
+    mehr über unsere Sponsoren und wie sie zusammenarbeiten.</a>
   form_disable_with: Bitte warten...
   invalid_page: Die Seitennummer liegt außerhalb des Bereichs. Umleitung zur Standardseite.
   locale_name: Deutsch
@@ -114,6 +111,16 @@ de:
           attributes:
             handle:
               invalid:
+        membership:
+          attributes:
+            user:
+              taken:
+              blank:
+              required:
+            user_id:
+              taken:
+              blank:
+              required:
         ownership:
           attributes:
             user_id:
@@ -273,14 +280,13 @@ de:
         source_code: Code
         statistics: Statistiken
         status: Status
+        support_us:
         supported_by: Unterstützt von
+        operated_by:
         supported_by_html: |
           <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
           wird unterstützt von
-        tested_by:
-        tracking_by: Getrackt von
         uptime: Betriebszeit
-        verified_by:
         secured_by:
         looking_for_maintainers:
       header:
@@ -289,6 +295,7 @@ de:
         settings: Einstellungen
         edit_profile: Profil bearbeiten
         search_gem_html: Suche Gems&hellip;
+        members:
       mfa_banner_html:
   breadcrumbs:
     home: Startseite
@@ -298,6 +305,7 @@ de:
     subscriptions: Abonnements
     gems:
     members:
+    invite_member:
   mailer:
     confirm_your_email: Bitte bestätigen Sie Ihre E-Mail-Adresse mit dem Link, der
       an Ihre E-Mail gesendet wurde.
@@ -449,6 +457,7 @@ de:
   organizations:
     index:
       title:
+      no_organizations:
     show:
       organization:
       gems:
@@ -456,6 +465,39 @@ de:
       members:
       no_history:
       no_gems:
+      add_member:
+      invite:
+      transfer:
+    members:
+      create:
+        user_already_invited:
+        user_not_found:
+        member_invited:
+      update:
+        member_updated:
+      destroy:
+        member_removed:
+        cannot_remove_self:
+      resend_invitation:
+        invitation_resent:
+        already_confirmed:
+      index:
+        invite:
+        pending:
+      edit:
+        update:
+        delete:
+        resend_invitation:
+      new:
+        handle:
+        role:
+        create:
+        invite:
+    invitations:
+      show:
+        accept:
+        decline:
+        title_html:
   pages:
     about:
       contributors_amount: "%{count} Rubyists"
@@ -497,8 +539,8 @@ de:
       title: Download RubyGems
     security:
       title: Security
-    sponsors:
-      title: Sponsors
+    supporters:
+      title:
   policies:
     index:
       title:
@@ -510,6 +552,15 @@ de:
       title:
     privacy:
       title:
+  policies_mailer:
+    policy_update_announcement:
+      subject:
+      title:
+      subtitle:
+    policy_update_review_closed:
+      subject:
+      title:
+      subtitle:
   password_mailer:
     change_password:
       closing: If you didn't request this, ignore this email. Your password has not
@@ -789,7 +840,9 @@ de:
       reserved_namespace:
     dependencies:
       header: "%{title} Abhängigkeiten"
-    gem_members:
+    release_info:
+      managed_by:
+      outside_contributors:
       authors_header: Autoren
       self_no_mfa_warning_html:
       not_using_mfa_warning_show:
@@ -827,6 +880,15 @@ de:
     security_events:
       title:
       description_html:
+    transfer:
+      cancelled:
+      organizations:
+        new:
+          organization:
+      confirm:
+        success:
+          one:
+          other:
   reverse_dependencies:
     index:
       title:

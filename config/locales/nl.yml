@@ -14,7 +14,6 @@ nl:
     beschikbare gems te vinden. <a href="%{contributing_docs}">Word een deelnemer</a>
     en verbeter de site met jouw aanpassingen.
   footer_sponsors_html:
-  footer_join_rt_html:
   form_disable_with: Een moment geduld...
   invalid_page:
   locale_name: Nederlands
@@ -102,6 +101,16 @@ nl:
           attributes:
             handle:
               invalid:
+        membership:
+          attributes:
+            user:
+              taken:
+              blank:
+              required:
+            user_id:
+              taken:
+              blank:
+              required:
         ownership:
           attributes:
             user_id:
@@ -255,14 +264,13 @@ nl:
         source_code: Code
         statistics: Statistieken
         status: Status
+        support_us:
         supported_by: Ondersteuning
+        operated_by:
         supported_by_html: |
           <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
           <br class="hidden lg:block"> wordt ondersteund door
-        tested_by: Getest door
-        tracking_by: Tracking
         uptime: Uptime
-        verified_by:
         secured_by:
         looking_for_maintainers:
       header:
@@ -271,6 +279,7 @@ nl:
         settings: Instellingen
         edit_profile: Wijzig profiel
         search_gem_html: Gems Zoeken&hellip;
+        members:
       mfa_banner_html:
   breadcrumbs:
     home: Startpagina
@@ -280,6 +289,7 @@ nl:
     subscriptions: Abonnementen
     gems:
     members:
+    invite_member:
   mailer:
     confirm_your_email:
     confirmation_subject:
@@ -397,6 +407,7 @@ nl:
   organizations:
     index:
       title:
+      no_organizations:
     show:
       organization:
       gems:
@@ -404,6 +415,39 @@ nl:
       members:
       no_history:
       no_gems:
+      add_member:
+      invite:
+      transfer:
+    members:
+      create:
+        user_already_invited:
+        user_not_found:
+        member_invited:
+      update:
+        member_updated:
+      destroy:
+        member_removed:
+        cannot_remove_self:
+      resend_invitation:
+        invitation_resent:
+        already_confirmed:
+      index:
+        invite:
+        pending:
+      edit:
+        update:
+        delete:
+        resend_invitation:
+      new:
+        handle:
+        role:
+        create:
+        invite:
+    invitations:
+      show:
+        accept:
+        decline:
+        title_html:
   pages:
     about:
       contributors_amount:
@@ -443,7 +487,7 @@ nl:
       title:
     security:
       title:
-    sponsors:
+    supporters:
       title:
   policies:
     index:
@@ -456,6 +500,15 @@ nl:
       title:
     privacy:
       title:
+  policies_mailer:
+    policy_update_announcement:
+      subject:
+      title:
+      subtitle:
+    policy_update_review_closed:
+      subject:
+      title:
+      subtitle:
   password_mailer:
     change_password:
       closing:
@@ -701,7 +754,9 @@ nl:
       reserved_namespace:
     dependencies:
       header: "%{title} afhankelijkheden"
-    gem_members:
+    release_info:
+      managed_by:
+      outside_contributors:
       authors_header:
       self_no_mfa_warning_html:
       not_using_mfa_warning_show:
@@ -739,6 +794,15 @@ nl:
     security_events:
       title:
       description_html:
+    transfer:
+      cancelled:
+      organizations:
+        new:
+          organization:
+      confirm:
+        success:
+          one:
+          other:
   reverse_dependencies:
     index:
       title:

@@ -33,6 +33,8 @@ if production_like
   worker_count = Integer(ENV.fetch("WEB_CONCURRENCY") { Concurrent.physical_processor_count })
   workers worker_count if worker_count > 1
   worker_timeout 60
+
+  plugin :statsd
 else
   # Specifies the `worker_timeout` threshold that Puma will use to wait before
   # terminating a worker in development environments.
@@ -62,8 +64,4 @@ end
 on_worker_boot do
   # Re-open appenders after forking the process. https://logger.rocketjob.io/forking.html
   SemanticLogger.reopen
-end
-
-on_restart do
-  Rails.configuration.launch_darkly_client&.close
 end

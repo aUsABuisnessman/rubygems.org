@@ -18,12 +18,12 @@ class OIDC::ApiKeyRoles::GitHubActionsWorkflowView < ApplicationView
     div(class: "t-body", data: { controller: "clipboard", clipboard_success_content_value: "✔" }) do
       p do
         t(".configured_for_html", link_html:
-          single_gem_role? ? helpers.link_to(gem_name, rubygem_path(gem_name)) : t(".a_gem"))
+          single_gem_role? ? link_to(gem_name, rubygem_path(gem_name)) : t(".a_gem"))
       end
 
       p do
         t(".to_automate_html", link_html:
-         single_gem_role? ? helpers.link_to(gem_name, rubygem_path(gem_name)) : t(".a_gem"))
+         single_gem_role? ? link_to(gem_name, rubygem_path(gem_name)) : t(".a_gem"))
       end
 
       p { t(".instructions_html") }
@@ -64,7 +64,7 @@ class OIDC::ApiKeyRoles::GitHubActionsWorkflowView < ApplicationView
           steps: [
             { uses: "rubygems/configure-rubygems-credentials@main",
               with: { "role-to-assume": api_key_role.token, audience: configured_audience, "gem-server": gem_server_url }.compact },
-            { uses: "actions/checkout@v4" },
+            { uses: "actions/checkout@v4", with: { "persists-credentials": false } },
             { name: "Set remote URL", run: set_remote_url_run },
             { name: "Set up Ruby", uses: "ruby/setup-ruby@v1", with: { "bundler-cache": true, "ruby-version": "ruby" } },
             { name: "Release", run: "bundle exec rake release" },
